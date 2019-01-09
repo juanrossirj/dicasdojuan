@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Dicas do Juan</title>
+
+<link rel="stylesheet" type="text/css" href="estilo.css">
+</head>
+
+<body>
+
+<nav id="nav01"></nav>
+
+<br>
+<br>
+
+<b>COMPARADOR DE INVESTIMENTOS</b><br>
+<hr>
+<b>Objetivo: comparar v&aacute;rias poss&iacute;veis aplica&ccedil;&otilde;es em um gr&aacute;fico para ver qual vale mais a pena.</b><br>
+<br>
+Par&acirc;metros:<br>
+* Se estiverem desatualizados, basta corrigir<br>
+<br>
+Taxa SELIC meta: <input id="TaxaSelic" value=6.5> % ao ano<br>
+<br>
+Taxa SELIC over: <input id="TaxaSelicOver" value=6.4> % ao ano<br>
+<br>
+CDI: <input id="TaxaCDI"  value=6.4> % ao ano<br>
+<br>
+IPCA (infla&ccedil;&atilde;o) nos pr&oacute;ximos anos (ESTIMATIVA): <input id="TaxaIpca" value=4.04> % ao ano<br>
+<br>
+*A simula&ccedil;&atilde;o sup&otilde;e taxas SELIC, CDI e IPCA constantes durante o per&iacute;odo analisado.<br>
+<br>
+*fontes:<br>
+SELIC meta: https://www.bcb.gov.br/acessoinformacao/legado?url=https:%2F%2Fwww.bcb.gov.br%2Fpec%2Fcopom%2Fport%2Ftaxaselic.asp<br>
+SELIC over: https://www.bcb.gov.br/acessoinformacao/legado?url=https:%2F%2Fwww.bcb.gov.br%2Fhtms%2Fselic%2Fselicdiarios.asp<br>
+CDI: http://www.b3.com.br/pt_br/<br>
+IPCA: http://www.portalbrasil.net/ipca.htm<br>
+<hr>
+Dados das aplica&ccedil;&otilde;es:<br>
+<br>
+<b><font color="red">ALTERE OS DADOS PARA OS VALORES DESEJADOS</font></b><br>
+<br>
+Valor a investir: R$ <input id="ValorInvestido" value=1000><br>
+<br>
+Simular por quanto tempo? <input id="MesesParaSimular" value=24> meses<br>
+<br>
+<font color="red">Selecione as aplica&ccedil;&otilde;es desejadas abaixo:</font><br>
+<br>
+<input type="checkbox" id="MostraPoupanca"  checked = true> Poupan&ccedil;a<br>
+<input id="taxaPoupancaEquivalente" disabled> % ao ano l&iacute;quido acima do IPCA<br>
+<br>
+<input type="checkbox" id="MostraTesouroSelic" checked = true > Tesouro Selic<br>
+<input id="taxaTesouroSelicEquivalente" disabled> % ao ano l&iacute;quido acima do IPCA<br>
+<br>
+<input type="checkbox" id="MostraLCA_LCIpos" > LCA/LCI p&oacute;s-fixada: <input id="taxaLCA_LCIpos" value=97> % do CDI<br>
+<input id="taxaLCAposEquivalente" disabled> % ao ano l&iacute;quido acima do IPCA<br>
+<br>
+<input type="checkbox" id="MostraCDBpos" > CDB/LC p&oacute;s-fixado: <input id="taxaCDBpos" value=115> % do CDI<br>
+<input id="taxaCDBposEquivalente" disabled> % ao ano l&iacute;quido acima do IPCA<br>
+<br>
+<input type="checkbox" id="MostraLCA_LCIipca" > LCA/LCI infla&ccedil;&atilde;o: IPCA + <input id="taxaLCA_LCIipca" value=3> % ao ano<br>
+<br>
+<input type="checkbox" id="MostraCDBipca" > CDB/LC infla&ccedil;&atilde;o: IPCA + <input id="taxaCDBipca" value=3.8> % ao ano<br>
+<input id="taxaCDBipcaEquivalente" disabled> % ao ano l&iacute;quido acima do IPCA<br>
+<br>
+<input type="checkbox" id="MostraTESOUROipca" > Tesouro infla&ccedil;&atilde;o: IPCA + <input id="taxaTESOUROipca" value=4.57> % ao ano<br>
+<input id="taxaTesouroIpcaEquivalente" disabled> % ao ano l&iacute;quido acima do IPCA<br>
+<br>
+<input type="checkbox" id="MostraLCA_LCIpre" > LCA/LCI prefixada: <input id="taxaLCA_LCIpre" value=7.25> % ao ano<br>
+<input id="taxaLCApreEquivalente" disabled> % ao ano l&iacute;quido acima do IPCA<br>
+<br>
+<input type="checkbox" id="MostraCDBpre" > CDB/LC prefixado: <input id="taxaCDBpre" value=8.42> % ao ano<br>
+<input id="taxaCDBpreEquivalente" disabled> % ao ano l&iacute;quido acima do IPCA<br>
+<br>
+<input type="checkbox" id="MostraTESOUROpre" > Tesouro prefixado: <input id="taxaTESOUROpre" value=7.37> % ao ano<br>
+<input id="taxaTesouroPreEquivalente" disabled> % ao ano l&iacute;quido acima do IPCA<br>
+<br>
+<br>
+<input type="checkbox" id="MostraIPCA"> IPCA + <input id="taxaIPCAextraInput" value=0.0> % ao ano (* Apenas para comparar o desempenho das aplica&ccedil;&otilde;es com a infla&ccedil;&atilde;o)<br>
+<br>
+<br>
+<font color="red">* Os valores indicados no gr&aacute;fico s&atilde;o aproximados e para fins did&aacute;ticos. Havendo discrep&acirc;ncia com o valor efetivamente recebido de uma institui&ccedil;&atilde;o financeira<br>
+ por um usu&aacute;rio do site, o autor do site n&atilde;o poder&aacute; ser responsabilizado.</font><br>
+<br>
+<button type="button" onclick="GerarGrafico()">Gerar Gr&aacute;fico</button> <br>
+<div id="curve_chart"></div>
+<br>
+<br>
+* Os campos referentes a LCA/LCI tamb&eacute;m se aplicam a CRA/CRI/Deb&ecirc;nture incentivada, por&eacute;m sem cobertura do Fundo Garantidor de Cr&eacute;ditos.<br>
+* Os campos referentes a CDB/LC tamb&eacute;m se aplicam a Deb&ecirc;nture, por&eacute;m sem cobertura do Fundo Garantidor de Cr&eacute;ditos.<br>
+<br>
+* As curvas indicam o rendimento a cada m&ecirc;s de cada aplica&ccedil;&atilde;o. Para a Poupan&ccedil;a e o Tesouro Selic, o valor indicado &eacute; muito pr&oacute;ximo do que<br>
+seria poss&iacute;vel sacar em cada m&ecirc;s. Outros investimentos podem ter rendimento menor que o indicado no gr&aacute;fico <u>em caso de saque antes do prazo<br>
+estipulado (vencimento)</u>, especialmente os prefixados e os indexados pela infla&ccedil;&atilde;o (ipca+).<br>
+<br>
+* Os investimentos p&oacute;s-fixados podem ter rendimento diferente na data do vencimento caso o Banco Central decida aumentar a taxa SELIC (aumenta<br>
+ o rendimento) ou reduz&iacute;-la (diminui o rendimento). A taxa SELIC tende a aumentar caso a infla&ccedil;&atilde;o aumente ou se o pa&iacute;s tiver dificuldade para pagar<br>
+ sua d&iacute;vida.<br>
+<br>
+* Os investimentos indexados &agrave; infla&ccedil;&atilde;o (ipca) podem ter rendimento diferente na data do vencimento caso a infla&ccedil;&atilde;o aumente (aumenta o rendimento)<br>
+ ou diminua (diminui o rendimento).<br>
+<br>
+<hr>
+Outras compara&ccedil;&otilde;es:<br>
+<br>
+<input id="taxaAoAno" value=6.4> % ao ano <button type="button" onclick="PercentualAnoParaMes()">>>></button> <input id="taxaAoMes"> % ao m&ecirc;s<br>
+<br>
+<input id="taxaAoMesInput" value=0.5183> % ao m&ecirc;s <button type="button" onclick="PercentualMesParaAno()">>>></button> <input id="taxaAoAnoOutput"> % ao ano<br>
+<br>
+IPCA + <input id="taxaIPCAmais" value=4.5> % ao ano <button type="button" onclick="IPCAmaisParaPre()">>>></button> <input id="taxaPreIpcaMais"> % ao ano<br>
+<br>
+<input id="taxaPercentualCDI" value=116> % do CDI <button type="button" onclick="CDIParaPre()">>>></button> <input id="taxaPreCDI"> % ao ano<br>
+<hr>
+
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+<script type="text/javascript">
+function CDIParaPre() {
+	var taxaPercentualCDI = document.getElementById("taxaPercentualCDI").value; // 116
+	var CDI = document.getElementById("TaxaCDI").value; // 6.4
+
+	taxaPercentualCDI = taxaPercentualCDI / 100.0; // 1.16
+	taxaPreCDI = taxaPercentualCDI * CDI; // 7.424
+
+	document.getElementById("taxaPreCDI").value = taxaPreCDI;	
+}
+
+function IPCAmaisParaPre() {
+	var IPCAmais = document.getElementById("taxaIPCAmais").value; // 4.5
+	var IPCA = document.getElementById("TaxaIpca").value; // 4.04
+	
+	IPCAmais = 1 + (IPCAmais/100.0); // 1.045
+	IPCA = 1 + (IPCA/100.0); // 1.0404
+
+	pre = IPCAmais * IPCA; // 1.087218
+	pre = 100*(pre - 1.0); // 8.7218	
+
+	document.getElementById("taxaPreIpcaMais").value = pre;	
+}
+
+function PercentualAnoParaMes() {
+	var taxaAoAno = document.getElementById("taxaAoAno").value; // 6.4
+
+	taxaAoAno = 1 + (taxaAoAno/100.0); // 1.064
+	taxaAoMes = Math.pow(taxaAoAno, 1.0/12.0); // 1.005183
+	taxaAoMes = 100*(taxaAoMes - 1.0); // 0.5183
+	document.getElementById("taxaAoMes").value = taxaAoMes;	
+}
+
+function PercentualMesParaAno() {
+	var taxaAoMes = document.getElementById("taxaAoMesInput").value; // 0.5183
+
+	taxaAoMes = 1 + (taxaAoMes/100.0); // 1.005183
+	taxaAoAno = Math.pow(taxaAoMes, 12.0); // 1.064
+	taxaAoAno = 100*(taxaAoAno - 1.0); // 6.4
+	document.getElementById("taxaAoAnoOutput").value = taxaAoAno;	
+}
+
+function GerarGrafico() {
+	// Load google charts
+	google.charts.load('current', {'packages':['corechart']});
+	google.charts.setOnLoadCallback(drawChart);
+}
+
+// Draw the chart and set the chart values
+function drawChart() {
+
+	var data = new google.visualization.DataTable();
+
+	var mostrarPoupanca = document.getElementById("MostraPoupanca").checked;
+	var mostrarTesouroSelic = document.getElementById("MostraTesouroSelic").checked;
+	var mostrarIPCA = document.getElementById("MostraIPCA").checked;
+	var mostrarLCA_LCIpos = document.getElementById("MostraLCA_LCIpos").checked;
+	var mostrarCDBpos = document.getElementById("MostraCDBpos").checked;
+	var mostrarLCA_LCIipca = document.getElementById("MostraLCA_LCIipca").checked;
+	var mostrarCDBipca = document.getElementById("MostraCDBipca").checked;
+	var mostrarTESOUROipca = document.getElementById("MostraTESOUROipca").checked;
+	var mostrarLCA_LCIpre = document.getElementById("MostraLCA_LCIpre").checked;
+	var mostrarCDBpre = document.getElementById("MostraCDBpre").checked;
+	var mostrarTESOUROpre = document.getElementById("MostraTESOUROpre").checked;
+	var mesesParaSimular = document.getElementById("MesesParaSimular").value;
+	var i = 0;
+	var taxaSelicAnual = document.getElementById("TaxaSelic").value;
+	var taxaSelicOver = document.getElementById("TaxaSelicOver").value;
+	var taxaCDIAnual = document.getElementById("TaxaCDI").value;
+	var taxaIPCA = document.getElementById("TaxaIpca").value;
+	var valorInvestido = document.getElementById("ValorInvestido").value;
+	var taxaCDI_LCA_LCIpos = document.getElementById("taxaLCA_LCIpos").value;
+	var taxaCDI_CDBpos = document.getElementById("taxaCDBpos").value;
+	var taxaLCA_LCIipca = document.getElementById("taxaLCA_LCIipca").value;
+	var taxaCDBipca = document.getElementById("taxaCDBipca").value;
+	var taxaTESOUROipca = document.getElementById("taxaTESOUROipca").value;
+	var taxaLCA_LCIpre = document.getElementById("taxaLCA_LCIpre").value;
+	var taxaCDBpre = document.getElementById("taxaCDBpre").value;
+	var taxaTESOUROpre = document.getElementById("taxaTESOUROpre").value;
+	var taxaIPCAextra = document.getElementById("taxaIPCAextraInput").value;
+	
+	// Inserindo colunas
+	data.addColumn('string', 'Mes');
+	colunaMes = 0;
+	colunaAtual = 0;
+
+	if (mostrarPoupanca) {
+//		alert("Mostrar Poupanca");
+		data.addColumn('number', 'Poupanca');
+		colunaAtual = colunaAtual + 1;
+		colunaPoupanca = colunaAtual;
+	}
+
+	if (mostrarTesouroSelic) {
+		data.addColumn('number', 'Tesouro Selic');
+		colunaAtual = colunaAtual + 1;
+		colunaTesouroSelic = colunaAtual;
+	}
+
+	if (mostrarIPCA) {
+//		alert("mostrarIPCA");
+		data.addColumn('number', 'IPCA');
+		colunaAtual = colunaAtual + 1;
+		colunaIPCA = colunaAtual;
+	}	
+	
+	if (mostrarLCA_LCIpos) {
+		data.addColumn('number', 'LCA/LCI pos');
+		colunaAtual = colunaAtual + 1;
+		colunaLCA_LCIpos = colunaAtual;
+	}
+
+	if (mostrarCDBpos) {
+		data.addColumn('number', 'CDB/LC pos');
+		colunaAtual = colunaAtual + 1;
+		colunaCDBpos = colunaAtual;
+	}
+
+	if (mostrarLCA_LCIipca) {
+//		alert("mostrarLCA_LCIipca");
+		data.addColumn('number', 'LCA/LCI inflacao');
+		colunaAtual = colunaAtual + 1;
+		colunaLCA_LCIipca = colunaAtual;
+	}
+
+		if (mostrarCDBipca) {
+//		alert("mostrarCDBipca");
+		data.addColumn('number', 'CDB/LC inflacao');
+		colunaAtual = colunaAtual + 1;
+		colunaCDBipca = colunaAtual;
+	}
+
+		if (mostrarTESOUROipca) {
+//		alert("mostrarTESOUROipca");
+		data.addColumn('number', 'Tesouro inflacao');
+		colunaAtual = colunaAtual + 1;
+		colunaTESOUROipca = colunaAtual;
+	}	
+	
+	if (mostrarLCA_LCIpre) {
+//		alert("mostrarLCA_LCIpre");
+		data.addColumn('number', 'LCA/LCI pre');
+		colunaAtual = colunaAtual + 1;
+		colunaLCA_LCIpre = colunaAtual;
+	}
+
+	if (mostrarCDBpre) {
+//		alert("mostrarCDBpre");
+		data.addColumn('number', 'CDB/LC pre');
+		colunaAtual = colunaAtual + 1;
+		colunaCDBpre = colunaAtual;
+	}
+
+	if (mostrarTESOUROpre) {
+//		alert("mostrarTESOUROpre");
+		data.addColumn('number', 'Tesouro pre');
+		colunaAtual = colunaAtual + 1;
+		colunaTESOUROpre = colunaAtual;
+	}
+	
+	// Inserindo linhas em branco
+//	alert("Inserindo linhas em branco");
+	data.addRows(Number(mesesParaSimular));
+	
+	// Inserindo meses
+//	alert("Inserindo meses");
+	for (i = 0; i < mesesParaSimular; i++) { 
+		mes_valor = i+1;
+		data.setCell(i, colunaMes, mes_valor.toString());
+	}
+
+	kCustodiaTesouroAa = (0.25/100)+1; // 1.003	
+	Aux = 1/12;
+	taxaCustodiaTesouroAm = Math.pow(kCustodiaTesouroAa, Aux); // 1.0002496
+	multiplicadorCustodiaTesouro = 2.0 - taxaCustodiaTesouroAm; // 0.9997
+	// Inserindo resultados Tesouro Selic
+	if (mostrarTesouroSelic) {
+		var taxaSelicLiquida = taxaSelicOver; // 6.4
+		Aux = 1/12;
+		kSelicLiquidaAa = (+taxaSelicLiquida/100)+1; // 1.064
+		taxaSelicLiquidaAm = Math.pow(kSelicLiquidaAa, Aux); // 1.005025
+		for (i = 0; i < mesesParaSimular; i++) { 
+			mes = i + 1;
+			valor = valorInvestido * (Math.pow(taxaSelicLiquidaAm, mes));
+			valor = valor * (Math.pow(multiplicadorCustodiaTesouro, mes));
+			valor = valor - valorInvestido;
+			valor = valor * MultiplicadorImpostoRenda(mes);
+			data.setCell(i, colunaTesouroSelic, valor);
+		}
+		valor = valor + (+valorInvestido); // 1141.321
+		multiplicador = valor / valorInvestido // 1.141321
+		Aux = 1/mesesParaSimular; // 1/24
+		multiplicador = Math.pow(multiplicador, Aux) // 1.005522
+		multiplicador = Math.pow(multiplicador, 12.0) // 1.06832
+		multiplicador = multiplicador / ((+taxaIPCA/100)+1);
+		multiplicador = 100.0 * (multiplicador - 1.0);
+		document.getElementById("taxaTesouroSelicEquivalente").value = multiplicador;
+	}
+
+	// Inserindo resultados Poupanca
+	if (mostrarPoupanca) {
+//		alert("Inserindo Poupanca");
+		var taxaPoupanca = taxaSelicAnual * 0.7; // 4.55
+		Aux = 1/12;
+		kPoupancaAa = (+taxaPoupanca/100)+1; // 1.0455
+		taxaPoupancaAm = Math.pow(kPoupancaAa, Aux); // 1.003714
+		for (i = 0; i < mesesParaSimular; i++) { 
+			mes = i + 1;
+			valor = valorInvestido * (Math.pow(taxaPoupancaAm, mes) - 1);
+			data.setCell(i, colunaPoupanca, valor);
+		}
+		valor = valor + (+valorInvestido); // 1141.321
+		multiplicador = valor / valorInvestido // 1.141321
+		Aux = 1/mesesParaSimular; // 1/24
+		multiplicador = Math.pow(multiplicador, Aux) // 1.005522
+		multiplicador = Math.pow(multiplicador, 12.0) // 1.06832
+		multiplicador = multiplicador / ((+taxaIPCA/100)+1);
+		multiplicador = 100.0 * (multiplicador - 1.0);
+		document.getElementById("taxaPoupancaEquivalente").value = multiplicador;
+	}
+
+	// Inserindo resultados IPCA
+	if (mostrarIPCA) {
+//		alert("Inserindo IPCA");
+		Aux = 1/12;
+		kIPCAAa = ((+taxaIPCA/100)+1) * ((+taxaIPCAextra/100)+1); // 1.0455
+		taxaIPCAAm = Math.pow(kIPCAAa, Aux); // 1.003714
+		for (i = 0; i < mesesParaSimular; i++) { 
+			mes = i + 1;
+			valor = valorInvestido * (Math.pow(taxaIPCAAm, mes) - 1);
+			data.setCell(i, colunaIPCA, valor);
+		}
+	}
+	
+	// Inserindo resultados LCA/LCI pos
+	if (mostrarLCA_LCIpos) {
+//		alert("Inserindo LCA/LCI pos");
+		var taxaLCA_LCIpos = taxaCDIAnual * taxaCDI_LCA_LCIpos / 100.0; // 5.8412
+		Aux = 1/12;
+		kLCA_LCIposAa = (+taxaLCA_LCIpos/100)+1; // 1.058412
+		taxaLCA_LCIposAm = Math.pow(kLCA_LCIposAa, Aux); // 1.004742
+		for (i = 0; i < mesesParaSimular; i++) { 
+			mes = i + 1;
+			valor = valorInvestido * (Math.pow(taxaLCA_LCIposAm, mes) - 1);
+			data.setCell(i, colunaLCA_LCIpos, valor);
+		}
+		valor = valor + (+valorInvestido); // 1141.321
+		multiplicador = valor / valorInvestido // 1.141321
+		Aux = 1/mesesParaSimular; // 1/24
+		multiplicador = Math.pow(multiplicador, Aux) // 1.005522
+		multiplicador = Math.pow(multiplicador, 12.0) // 1.06832
+		multiplicador = multiplicador / ((+taxaIPCA/100)+1);
+		multiplicador = 100.0 * (multiplicador - 1.0);
+		document.getElementById("taxaLCAposEquivalente").value = multiplicador;
+	}	
+
+	// Inserindo resultados CDB pos
+	if (mostrarCDBpos) {
+//		alert("Inserindo CDB pos");
+		var taxaCDBpos = taxaCDIAnual * taxaCDI_CDBpos / 100.0; // 7.1392
+		Aux = 1/12;
+		kCDBposAa = (+taxaCDBpos/100)+1; // 1.071392
+		taxaCDBposAm = Math.pow(kCDBposAa, Aux); // 1.005763
+		for (i = 0; i < mesesParaSimular; i++) { 
+			mes = i + 1;
+			valor = valorInvestido * (Math.pow(taxaCDBposAm, mes) - 1);
+			valor = valor * MultiplicadorImpostoRenda(mes);
+			data.setCell(i, colunaCDBpos, valor);
+		}
+		valor = valor + (+valorInvestido); // 1141.321
+		multiplicador = valor / valorInvestido // 1.141321
+		Aux = 1/mesesParaSimular; // 1/24
+		multiplicador = Math.pow(multiplicador, Aux) // 1.005522
+		multiplicador = Math.pow(multiplicador, 12.0) // 1.06832
+		multiplicador = multiplicador / ((+taxaIPCA/100)+1);
+		multiplicador = 100.0 * (multiplicador - 1.0);
+		document.getElementById("taxaCDBposEquivalente").value = multiplicador;
+	}
+
+	// Inserindo resultados LCA/LCI inflacao
+	if (mostrarLCA_LCIipca) {
+//		alert("Inserindo LCA/LCI inflacao");
+		Aux = 1/12;
+		kLCA_LCIipcaAa = ((+taxaIPCA/100)+1) * ((+taxaLCA_LCIipca/100)+1); // 1.098
+		taxaLCA_LCIipcaAm = Math.pow(kLCA_LCIipcaAa, Aux); // 1.007821
+		for (i = 0; i < mesesParaSimular; i++) { 
+			mes = i + 1;
+			valor = valorInvestido * (Math.pow(taxaLCA_LCIipcaAm, mes) - 1);
+			data.setCell(i, colunaLCA_LCIipca, valor);
+		}
+	}	
+
+	// Inserindo resultados CDB inflacao
+	if (mostrarCDBipca) {
+//		alert("Inserindo CDB inflacao");
+		Aux = 1/12;
+		kCDBipcaAa = ((+taxaIPCA/100)+1) * ((+taxaCDBipca/100)+1); // 1.098
+		taxaCDBipcaAm = Math.pow(kCDBipcaAa, Aux); // 1.007821
+		for (i = 0; i < mesesParaSimular; i++) { 
+			mes = i + 1;
+			valor = valorInvestido * (Math.pow(taxaCDBipcaAm, mes) - 1);
+			valor = valor * MultiplicadorImpostoRenda(mes);
+			data.setCell(i, colunaCDBipca, valor);
+		}
+		valor = valor + (+valorInvestido); // 1141.321
+		multiplicador = valor / valorInvestido // 1.141321
+		Aux = 1/mesesParaSimular; // 1/24
+		multiplicador = Math.pow(multiplicador, Aux) // 1.005522
+		multiplicador = Math.pow(multiplicador, 12.0) // 1.06832
+		multiplicador = multiplicador / ((+taxaIPCA/100)+1);
+		multiplicador = 100.0 * (multiplicador - 1.0);
+		document.getElementById("taxaCDBipcaEquivalente").value = multiplicador;
+	}
+
+	// Inserindo resultados Tesouro inflacao
+	if (mostrarTESOUROipca) {
+//		alert("Inserindo TESOURO inflacao");
+		Aux = 1/12;
+		kTESOUROipcaAa = ((+taxaIPCA/100)+1) * ((+taxaTESOUROipca/100)+1); // 1.098
+		taxaTESOUROipcaAm = Math.pow(kTESOUROipcaAa, Aux); // 1.007821
+		for (i = 0; i < mesesParaSimular; i++) { 
+			mes = i + 1;
+			valor = valorInvestido * (Math.pow(taxaTESOUROipcaAm, mes));
+			valor = valor * (Math.pow(multiplicadorCustodiaTesouro, mes));
+			valor = valor - valorInvestido;
+			valor = valor * MultiplicadorImpostoRenda(mes);
+			data.setCell(i, colunaTESOUROipca, valor);
+		}
+		valor = valor + (+valorInvestido); // 1141.321
+		multiplicador = valor / valorInvestido // 1.141321
+		Aux = 1/mesesParaSimular; // 1/24
+		multiplicador = Math.pow(multiplicador, Aux) // 1.005522
+		multiplicador = Math.pow(multiplicador, 12.0) // 1.06832
+		multiplicador = multiplicador / ((+taxaIPCA/100)+1);
+		multiplicador = 100.0 * (multiplicador - 1.0);
+		document.getElementById("taxaTesouroIpcaEquivalente").value = multiplicador;
+		}	
+	
+	// Inserindo resultados LCA/LCI pre
+	if (mostrarLCA_LCIpre) {
+//		alert("Inserindo LCA/LCI pre");
+		var taxaLCA_LCIpre = Number(taxaLCA_LCIpre); // 9.8
+		Aux = 1/12;
+		kLCA_LCIpreAa = (+taxaLCA_LCIpre/100)+1; // 1.098
+		taxaLCA_LCIpreAm = Math.pow(kLCA_LCIpreAa, Aux); // 1.007821
+		for (i = 0; i < mesesParaSimular; i++) { 
+			mes = i + 1;
+			valor = valorInvestido * (Math.pow(taxaLCA_LCIpreAm, mes) - 1);
+			data.setCell(i, colunaLCA_LCIpre, valor);
+		}
+		valor = valor + (+valorInvestido); // 1141.321
+		multiplicador = valor / valorInvestido // 1.141321
+		Aux = 1/mesesParaSimular; // 1/24
+		multiplicador = Math.pow(multiplicador, Aux) // 1.005522
+		multiplicador = Math.pow(multiplicador, 12.0) // 1.06832
+		multiplicador = multiplicador / ((+taxaIPCA/100)+1);
+		multiplicador = 100.0 * (multiplicador - 1.0);
+		document.getElementById("taxaLCApreEquivalente").value = multiplicador;
+	}
+
+	// Inserindo resultados CDB pre
+	if (mostrarCDBpre) {
+//		alert("Inserindo CDB pre");
+		var taxaCDBpre = Number(taxaCDBpre); // 9.8
+		Aux = 1/12;
+		kCDBpreAa = (+taxaCDBpre/100)+1; // 1.098
+		taxaCDBpreAm = Math.pow(kCDBpreAa, Aux); // 1.007821
+		for (i = 0; i < mesesParaSimular; i++) { 
+			mes = i + 1;
+			valor = valorInvestido * (Math.pow(taxaCDBpreAm, mes) - 1);
+			valor = valor * MultiplicadorImpostoRenda(mes);
+			data.setCell(i, colunaCDBpre, valor);
+		}
+		valor = valor + (+valorInvestido); // 1141.321
+		multiplicador = valor / valorInvestido // 1.141321
+		Aux = 1/mesesParaSimular; // 1/24
+		multiplicador = Math.pow(multiplicador, Aux) // 1.005522
+		multiplicador = Math.pow(multiplicador, 12.0) // 1.06832
+		multiplicador = multiplicador / ((+taxaIPCA/100)+1);
+		multiplicador = 100.0 * (multiplicador - 1.0);
+		document.getElementById("taxaCDBpreEquivalente").value = multiplicador;
+	}
+
+	// Inserindo resultados Tesouro pre
+	if (mostrarTESOUROpre) {
+//		alert("Inserindo Tesouro pre");
+		var taxaTESOUROpre = Number(taxaTESOUROpre); // 9.8
+		Aux = 1/12;
+		kTESOUROpreAa = (+taxaTESOUROpre/100)+1; // 1.098
+		taxaTESOUROpreAm = Math.pow(kTESOUROpreAa, Aux); // 1.007821
+		for (i = 0; i < mesesParaSimular; i++) { 
+			mes = i + 1;
+			valor = valorInvestido * (Math.pow(taxaTESOUROpreAm, mes));
+			valor = valor * (Math.pow(multiplicadorCustodiaTesouro, mes));
+			valor = valor - valorInvestido;
+			valor = valor * MultiplicadorImpostoRenda(mes);
+			data.setCell(i, colunaTESOUROpre, valor);
+		}
+		valor = valor + (+valorInvestido); // 1141.321
+		multiplicador = valor / valorInvestido // 1.141321
+		Aux = 1/mesesParaSimular; // 1/24
+		multiplicador = Math.pow(multiplicador, Aux) // 1.005522
+		multiplicador = Math.pow(multiplicador, 12.0) // 1.06832
+		multiplicador = multiplicador / ((+taxaIPCA/100)+1);
+		multiplicador = 100.0 * (multiplicador - 1.0);
+		document.getElementById("taxaTesouroPreEquivalente").value = multiplicador;
+	}
+
+//		var numeroSerieIPCA = Number(colunaIPCA)-1;
+//		var numeroSerieIPCAstring = (Number(colunaIPCA)-1).toString();
+//		alert(numeroSerieIPCA);
+//		alert(numeroSerieIPCAstring);
+		
+  // Optional; add a title and set the width and height of the chart
+        var options = {
+          title: 'Comparacao de Rendimentos',
+          curveType: 'function',
+          legend: { position: 'right' },
+		  hAxis: { title: 'Meses', format: 'none'},
+		  vAxis: { title: 'Rendimento', format: 'currency'},
+		  width:1200,
+		  height:600
+//          series: {
+//			numeroSerieIPCA: { lineDashStyle: [1, 1] }
+//			0: { lineDashStyle: [1, 1] }
+//			'0' : { lineDashStyle: [1, 1] }
+//			numeroSerieIPCA.toString(): { lineDashStyle: [1, 1] }
+//			numeroSerieIPCAstring: { lineDashStyle: [1, 1] }
+//			}
+		 };  
+  
+  // Display the chart inside the <div> element with id="piechart"
+        var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+        chart.draw(data, options);    
+}
+
+function MultiplicadorImpostoRenda(mes)
+{
+	multiplicador = 1;
+
+	if (mes < 6) {
+		multiplicador = 0.775;
+	}
+	else if (6 <= mes && mes < 12) {
+		multiplicador = 0.8;
+	}
+	else if (12 <= mes && mes < 24) {
+		multiplicador = 0.825;
+	}
+	else if (24 <= mes) {
+		multiplicador = 0.85;
+	}	
+
+	return multiplicador;
+}
+
+</script>  
+  
+<br>
+<a href="index.html">Voltar para p&aacute;gina inicial</a>
+<br>
+<br>
+<br>
+<!--  
+<table style="width:100%">
+  <tr>
+    <td></td>
+    <td><a href="01_poupar.html">Pr&oacute;ximo >></a></td> 
+  </tr>
+</table>
+-->
+ 
+<!--  <h2>Quanto Poupar</h2>  -->
+ 
+
+<script src="scripts.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-83526305-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+<div style='text-align: right;position: fixed;z-index:9999999;bottom: 0; width: 100%;cursor: pointer;line-height: 0;display:block !important;'><a title="Hosted on free web hosting 000webhost.com. Host your own website for FREE." target="_blank" href="https://www.000webhost.com/?utm_source=000webhostapp&amp;utm_campaign=000_logo&amp;utm_medium=website&amp;utm_content=footer_img"><img src="https://cdn.000webhost.com/000webhost/logo/footer-powered-by-000webhost-white2.png"  alt="www.000webhost.com"></a></div></body>
+
+</html> 
