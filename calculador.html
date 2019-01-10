@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Dicas do Juan</title>
+
+<link rel="stylesheet" type="text/css" href="estilo.css">
+</head>
+
+<body>
+
+<nav id="nav01"></nav>
+
+<h1>Calculador Gen&eacute;rico</h1> 
+
+Alguns c&aacute;lculos recorrentes de engenharia el&eacute;trica podem ser feitos abaixo.<br>
+<br>
+<p><b>N&atilde;o use v&iacute;rgulas, apenas pontos decimais!</b></p>  
+
+<hr>
+<!--____________________________________________________________________ -->
+<p><b>Cartesiano -> Polar</b></p>  
+
+Valor em Coordenadas Cartesianas: <input id="Real"> +j <input id="Imag"> (Real +j Imag)<br>
+<br>
+<button type="button" onclick="CartesianoParaPolar()">Calcula Polar</button><br>
+<br>
+Resultado em Coordenadas Polares: <input id="ModuloCampo"> /_ <input id="AnguloCampo"> (M&oacute;dulo /_ &Acirc;nguloEmGraus)<br>
+<script>
+function CartesianoParaPolar()
+{
+    R = document.getElementById("Real").value; // Parte Real
+    X = document.getElementById("Imag").value; // Parte Imaginária
+
+    Mod2 = (R*R) + (X*X);
+    Mod = Math.pow(Mod2, 0.5); // Módulo
+
+    Ang = 180*Math.atan2(X,R)/Math.PI; // Ângulo
+
+	// Imprime resultado
+	document.getElementById("ModuloCampo").value = Mod;
+	document.getElementById("AnguloCampo").value = Ang;
+}
+</script>
+<hr>
+<!--____________________________________________________________________ -->
+<p><b>Polar -> Cartesiano</b></p>  
+
+Valor em Coordenadas Polares: <input id="Modulo"> /_ <input id="Angulo"> (M&oacute;dulo /_ &Acirc;nguloEmGraus)<br>
+<br>
+<button type="button" onclick="PolarParaCartesiano()">Calcula Cartesiano</button><br>
+<br>
+Resultado em Coordenadas Cartesianas: <input id="RealCampo1"> +j <input id="ImagCampo1"> (Real +j Imag)<br>
+<script>
+function PolarParaCartesiano()
+{
+    Mod = document.getElementById("Modulo").value; // Módulo
+    AngGraus = document.getElementById("Angulo").value; // Ângulo em graus
+
+    AngRad = Math.PI*AngGraus/180; // Ângulo em radianos
+
+	R = Mod * Math.cos(AngRad) // Parte real
+	X = Mod * Math.sin(AngRad) // Parte imaginária
+	
+	// Imprime resultado
+	document.getElementById("RealCampo1").value = R;
+	document.getElementById("ImagCampo1").value = X;	
+}
+</script>
+<hr>
+<!--____________________________________________________________________ -->
+<p><b>Aritm&eacute;tica de n&ucirc;meros imagin&aacute;rios</b></p>  
+
+N&ucirc;mero 1: <input id="A"> <input id="B"> 
+<!--   <select id="Opcoes" onchange="TrocaTextos()">   -->
+<select id="Opcoes1">
+  <option value="cartesiano">Cartesiano (A +j B)</option>
+  <option value="polar">Polar (M&oacute;dulo /_ AnguloEmGraus)</option>
+</select><br>
+<br>
+Opera&ccedil;&atilde;o: 
+<select id="Opcoes4">
+  <option value="soma">Soma (Num1 + Num2)</option>
+  <option value="subtracao">Subtra&ccedil;&atilde;o (Num1 - Num2)</option>
+  <option value="multiplicacao">Multiplica&ccedil;&atilde;o (Num1 * Num2)</option>
+  <option value="divisao">Divis&atilde;o (Num1 / Num2)</option>
+</select><br>
+<br>
+N&ucirc;mero 2: <input id="C"> <input id="D">
+<select id="Opcoes2">
+  <option value="cartesiano">Cartesiano (A +j B)</option>
+  <option value="polar">Polar (M&oacute;dulo /_ AnguloEmGraus)</option>
+</select><br>
+<br>
+<button type="button" onclick="SomaImaginarios()">Calcular</button><br>
+<br>
+Resultado: <input id="RealCampo"> <input id="ImagCampo">
+<select id="Opcoes3">
+  <option value="cartesiano">Cartesiano (A +j B)</option>
+  <option value="polar">Polar (M&oacute;dulo /_ AnguloEmGraus)</option>
+</select><br>
+<br>
+<script>
+function SomaImaginarios()
+{
+	Aorig = document.getElementById("A").value; // Parte real 1 ou mod 1
+	Borig = document.getElementById("B").value; // Parte imaginaria 1 ou ang 1
+	Corig = document.getElementById("C").value; // Parte real 2 ou mod 2
+	Dorig = document.getElementById("D").value; // Parte imaginaria 2 ou ang 2
+
+	// As contas serao feitas em coordenadas retangulares
+	// Se algum número estiver em coordenada polar, precisa passar para retangular
+
+	if (document.getElementById("Opcoes1").value == "polar") // Número1 está em coordenadas polares
+	{
+		// Aorig é o Mod1, Borig é o Ang1Graus
+		AngRad = GrauParaRadiano(Borig); // Ângulo em radianos
+		A = Aorig * Math.cos(AngRad) // Parte real
+		B = Aorig * Math.sin(AngRad) // Parte imaginária
+	}
+	else // Se estiver em coordenadas cartesianas, não precisa mudar
+	{
+		A = Aorig;
+		B = Borig;
+	}
+
+	if (document.getElementById("Opcoes2").value == "polar") // Número2 está em coordenadas polares
+	{
+		// Corig é o Mod2, Dorig é o Ang2Graus
+		AngRad = GrauParaRadiano(Dorig); // Ângulo em radianos
+		C = Corig * Math.cos(AngRad) // Parte real
+		D = Corig * Math.sin(AngRad) // Parte imaginária
+	}
+	else // Se estiver em coordenadas cartesianas, não precisa mudar
+	{
+		C = Corig;
+		D = Dorig;
+	}	
+
+
+	if (document.getElementById("Opcoes4").value == "soma") // Somar (1 + 2)
+	{	// (A + j B) + (C +j D) = (A+C) +j (B+D)
+		Real = +A + +C; // Soma, parte real
+		Imag = +B + +D; // Soma, parte imaginaria
+	}
+	else if (document.getElementById("Opcoes4").value == "subtracao") // Subtrair (1 - 2)
+	{	// (A + j B) - (C +j D) = (A-C) +j (B-D)
+		Real = +A - +C; // Subtração, parte real
+		Imag = +B - +D; // Subtração, parte imaginaria	
+	}
+	else if (document.getElementById("Opcoes4").value == "multiplicacao") // Multiplicar (1 * 2)
+	{	// (A + j B) * (C +j D) = (AC-BD) +j (BC+AD)
+		Real = +A*+C - +B*+D; // Multiplicação, parte real
+		Imag = +B*+C + +A*+D; // Multiplicação, parte imaginaria	
+	}
+	else if (document.getElementById("Opcoes4").value == "divisao") // Dividir (1 / 2)
+	{	// (A + j B) / (C +j D) = (AC+BD) +j (BC-AD)
+		Denominador = (+C*+C) + (+D*+D);
+		Real = (+A*+C + +B*+D) / Denominador; // Divisão, parte real
+		Imag = (+B*+C - +A*+D) / Denominador; // Divisão, parte imaginaria	
+	}
+	
+	
+	// Verifica se precisa passar resultado para polar
+	if (document.getElementById("Opcoes3").value == "polar") // Resultad deve ficar em coordenadas polares
+	{
+		// Corig é o Mod2, Dorig é o Ang2Graus
+		Mod = Modulo(Real,Imag);
+
+		Ang = 180*Math.atan2(Imag,Real)/Math.PI; // Ângulo
+
+		Real = Mod;
+		Imag = Ang;		
+	}
+	
+	// Imprime resultado
+	document.getElementById("RealCampo").value = Real;
+	document.getElementById("ImagCampo").value = Imag;
+}
+function GrauParaRadiano(AnguloEmGraus)
+{
+	return Math.PI*AnguloEmGraus/180;
+}
+function Modulo(Real,Imag)
+{
+	Mod2 = (+Real*+Real) + (+Imag*+Imag); // R^2 + I^2
+	return Math.pow(Mod2, 0.5); // Raiz(R^2 + I^2)
+}
+</script>
+
+
+<!--
+<p id="Resultado1"> </p>
+	document.getElementById("Resultado1").innerHTML = "Ao final desse período você vai ter juntado ($):";
+	document.getElementById("Resultado2").innerHTML = Soma;
+-->
+
+<hr>
+<!--____________________________________________________________________ -->
+<p><b>Imped&acirc;ncias em paralelo</b></p>  
+
+Imped&acirc;ncia 1: <input id="Impedancia1A"> <input id="Impedancia1B"> 
+<!--   <select id="Opcoes" onchange="TrocaTextos()">   -->
+<select id="OpcoesParalelo1">
+  <option value="cartesiano">Cartesiano (A +j B)</option>
+  <option value="polar">Polar (M&oacute;dulo /_ AnguloEmGraus)</option>
+</select><br>
+<br>
+Imped&acirc;ncia 2: <input id="Impedancia2A"> <input id="Impedancia2B">
+<select id="OpcoesParalelo2">
+  <option value="cartesiano">Cartesiano (A +j B)</option>
+  <option value="polar">Polar (M&oacute;dulo /_ AnguloEmGraus)</option>
+</select><br>
+<br>
+<button type="button" onclick="CalculaParalelo()">Calcular</button><br>
+<br>
+Resultado: <input id="ParaleloA"> <input id="ParaleloB">
+<select id="OpcoesParalelo3">
+  <option value="cartesiano">Cartesiano (A +j B)</option>
+  <option value="polar">Polar (M&oacute;dulo /_ AnguloEmGraus)</option>
+</select><br>
+<br>
+<script>
+function CalculaParalelo()
+{
+	Aorig = document.getElementById("Impedancia1A").value; // Parte real 1 ou mod 1
+	Borig = document.getElementById("Impedancia1B").value; // Parte imaginaria 1 ou ang 1
+	Corig = document.getElementById("Impedancia2A").value; // Parte real 2 ou mod 2
+	Dorig = document.getElementById("Impedancia2B").value; // Parte imaginaria 2 ou ang 2
+
+	// As contas serao feitas em coordenadas retangulares
+	// Se algum número estiver em coordenada polar, precisa passar para retangular
+
+	if (document.getElementById("OpcoesParalelo1").value == "polar") // Impedância1 está em coordenadas polares
+	{
+		// Aorig é o Mod1, Borig é o Ang1Graus
+		AngRad = GrauParaRadiano(Borig); // Ângulo em radianos
+		A = Aorig * Math.cos(AngRad) // Parte real
+		B = Aorig * Math.sin(AngRad) // Parte imaginária
+	}
+	else // Se estiver em coordenadas cartesianas, não precisa mudar
+	{
+		A = Aorig;
+		B = Borig;
+	}
+
+	if (document.getElementById("OpcoesParalelo2").value == "polar") // Impedância2 está em coordenadas polares
+	{
+		// Corig é o Mod2, Dorig é o Ang2Graus
+		AngRad = GrauParaRadiano(Dorig); // Ângulo em radianos
+		C = Corig * Math.cos(AngRad) // Parte real
+		D = Corig * Math.sin(AngRad) // Parte imaginária
+	}
+	else // Se estiver em coordenadas cartesianas, não precisa mudar
+	{
+		C = Corig;
+		D = Dorig;
+	}	
+
+	// Numerador, Impedancia1 x Impedancia2
+	// (A + j B) * (C +j D) = (AC-BD) +j (BC+AD)
+	NumeradorReal = +A*+C - +B*+D; // Multiplicação, parte real
+	NumeradorImag = +B*+C + +A*+D; // Multiplicação, parte imaginaria
+	
+	// Denominador, Impedancia1 + Impedancia2
+	// (A + j B) + (C +j D) = (A+C) +j (B+D)
+	DenominadorReal = +A + +C; // Soma, parte real
+	DenominadorImag = +B + +D; // Soma, parte imaginaria
+
+	// Resultado, Numerador / Denominador
+	// (A + j B) / (C +j D) = (AC+BD) +j (BC-AD)
+	DenominadorAux = (+DenominadorReal*+DenominadorReal) + (+DenominadorImag*+DenominadorImag);
+	ParaleloReal   = (+NumeradorReal*+DenominadorReal + +NumeradorImag*+DenominadorImag) / DenominadorAux; // Divisão, parte real
+	ParaleloImag   = (+NumeradorImag*+DenominadorReal - +NumeradorReal*+DenominadorImag) / DenominadorAux; // Divisão, parte imaginaria	
+	
+	
+	// Verifica se precisa passar resultado para polar
+	if (document.getElementById("OpcoesParalelo3").value == "polar") // Resultad deve ficar em coordenadas polares
+	{
+		// Corig é o Mod2, Dorig é o Ang2Graus
+		Mod = Modulo(ParaleloReal,ParaleloImag);
+		Ang = 180*Math.atan2(ParaleloImag,ParaleloReal)/Math.PI; // Ângulo
+
+		ParaleloReal = Mod;
+		ParaleloImag = Ang;		
+	}
+	
+	// Imprime resultado
+	document.getElementById("ParaleloA").value = ParaleloReal;
+	document.getElementById("ParaleloB").value = ParaleloImag;
+}
+</script>
+
+<hr>
+<p><b>Aposentadoria comendo o bolo</b></p>  
+
+Vai poupar quanto por m&ecirc;s? ($) <input id="Parcela"> (Exemplo: 100)<br>
+Quanto voc&ecirc; acha que seus investimentos v&atilde;o render acima da infla&ccedil;&atilde;o ao ano? (%) <input id="JurosAa"> (Exemplo: 4)<br>
+Vai poupar por quanto tempo? (anos) <input id="Anos"> (Exemplo: 30) <br>
+J&aacute; tem algum dinheiro guardado hoje? Quanto? ($) <input id="Inicial"> (Exemplo: 5000) <br>
+<br>
+OPCIONAL: Se for comer o bolo de dinheiro, em quanto tempo vai querer acabar com toda a reserva? (anos) <input id="AnosComendoBolo"> (Exemplo: 20)<br>
+(por exemplo, usar todo o dinheiro dos 65 aos 85 anos, n&atilde;o sobrando nada depois disso) <br>
+<br>
+<button type="button" onclick="CalculaValorFuturo()">Calcular</button> <br>
+<br>
+Resultados:<br>
+<br>
+Ao final desse per&iacute;odo voc&ecirc; vai ter juntado ($): <input id="TotalPoupado" disabled><br>
+Esse dinheiro guardado vai te dar uma renda por m&ecirc;s acima da infla&ccedil;&atilde;o de ($): <input id="RendaObtida" disabled> (renda para sempre, nunca vai acabar)<br>
+<br>
+Se for comer o bolo de dinheiro, poder&aacute; sacar por m&ecirc;s ($):  <input id="RendaComendoBolo" disabled> (ao final, ter&aacute; zerado toda a reserva)<br>
+<br>
+Se desconsiderarmos os rendimentos, voc&ecirc; poder&aacute; sacar por m&ecirc;s ($):  <input id="SaqueSemRendimentos" disabled> (ao final, ter&aacute; zerado toda a reserva)<br>
+<!--
+<p id="Resultado1"> </p>
+<p id="Resultado2"> </p>
+<p id="Resultado3"> </p>
+<p id="Resultado4"> </p>
+<p id="Resultado5"> </p>
+-->
+<script>
+function CalculaValorFuturo()
+{
+    DinheiroInicial = 0; // Inicializando
+
+	// Obtem valor do campo preenchido
+	a1 = document.getElementById("Parcela").value; // Parcela mensal
+	JurosAa = document.getElementById("JurosAa").value; // Juros ao ano, 6
+    kJurosAa = (+JurosAa/100)+1; // 1.06
+    Aux = 1/12;
+    JurosAm = Math.pow(kJurosAa, Aux); // 1.004868
+	Anos = document.getElementById("Anos").value; // Anos poupando
+    Meses = Anos * 12; // Meses poupando
+    qn1 = Math.pow(JurosAm, Meses)-1; // q^n-1
+    q1 = JurosAm - 1; // q-1
+    qn1_q1 = qn1 / q1; // q^n-1 / q-1
+    Soma1 = a1 * qn1_q1; // a1 * (q^n-1 / q-1)
+
+	Inicial = document.getElementById("Inicial").value; // Valor inicial	
+    Soma2 = Inicial * Math.pow(kJurosAa, Anos);
+	
+	Soma = Soma1 + Soma2;
+	
+	// Imprime resultado
+	document.getElementById("TotalPoupado").value = Soma;
+	
+//	document.getElementById("Resultado1").innerHTML = "Ao final desse período você vai ter juntado ($):";
+//	document.getElementById("Resultado2").innerHTML = Soma;
+//	document.getElementById("Resultado3").innerHTML = "Esse dinheiro guardado vai render acima da inflação por mês ($):";
+	
+    Renda = Soma * (JurosAm - 1);
+	document.getElementById("RendaObtida").value = Renda;
+
+//	document.getElementById("Resultado4").innerHTML = Renda;
+
+	AnosComendoBolo = document.getElementById("AnosComendoBolo").value; // Tempo até zerar a reserva
+	MesesComendoBolo = AnosComendoBolo * 12;
+
+	// JurosAm = 1.00407
+	i = JurosAm - 1; // 0.00407
+	aux1 = Math.pow(JurosAm, MesesComendoBolo); // 1.00407^meses
+	aux2 = 1.0 / aux1; 
+	aux3 = 1.0 - aux2;
+	aux4 = i / aux3;
+	RendaComendoBolo = Soma * aux4;
+
+//	document.getElementById("RendaComendoBolo").value = RendaComendoBolo;	
+	document.getElementById("RendaComendoBolo").value = RendaComendoBolo;
+
+
+	SaqueSemRendimentos = Soma / MesesComendoBolo;
+	document.getElementById("SaqueSemRendimentos").value = SaqueSemRendimentos;	
+	}
+</script>
+
+<hr>
+<p><b>Vale mais a pena comprar a vista com desconto ou em parcelas sem juros?</b></p>
+
+Valor da compra, sem desconto ($) <input id="ValorCompra"> (Exemplo: 1000)<br>
+Quantidade de parcelas sem juros <input id="QuantidadeParcelas"> (Exemplo: 10)<br>
+
+<!--
+Se comprar parcelado, vai aplicar o dinheiro em que tipo de renda fixa?
+<select id="TipoRendaFixa">
+  <option value="Poupanca">Poupança</option>
+  <option value="FundoCurtoPrazo">Fundo de Curto Prazo</option>
+  <option value="TesouroSelic">Tesouro Selic</option>
+</select><br>
+-->
+
+Quanto voc&ecirc; acha que vai render nos pr&oacute;ximos 12 meses a renda fixa onde voc&ecirc; vai aplicar o dinheiro, caso compre parcelado? (%) <input id="Rendimento12Meses"> (Exemplo: 12)<br>
+(um chute poderia ser quanto ela rendeu nos &ucirc;ltimos 12 meses)<br>
+A primeira parcela ser&aacute; paga quando?
+<select id="OpcoesDataPagamento">
+  <option value="Hoje">Hoje</option>
+  <option value="30Dias">Daqui a 30 dias</option>
+</select>
+<br>
+<br>
+<button type="button" onclick="CalculaPagamentoParcelas()">Calcular</button> <br>
+<br>
+Se comprar em parcelas sem juros, aplicando em renda fixa enquanto isso, ao terminar de	pagar a &ucirc;ltima parcela e quitar a compra ainda restar&aacute; aplicado: ($) <input id="RestoDinheiro" disabled><br>
+O pre&ccedil;o final descontando a sobra de rendimento ser&aacute;: ($) <input id="PrecoFinal" disabled><br>
+Para valer a pena pagar &agrave; vista, o desconto (&agrave; vista) deve ser MAIOR que: (%) <input id="DescontoAVista" disabled><br>
+
+<script>
+function CalculaPagamentoParcelas()
+{
+	ValorCompra = 0; // Inicializando
+
+	// Obtem valor do campo preenchido
+	ValorCompra = document.getElementById("ValorCompra").value; // Valor da Compra
+	QuantidadeParcelas = document.getElementById("QuantidadeParcelas").value; // Quantidade de Parcelas
+	Rendimento12Meses = document.getElementById("Rendimento12Meses").value; // Rendimento nos ultimos 12 Meses
+
+	kJurosAm = MultipicadorJurosAoMes(Rendimento12Meses);
+
+	Parcela = +ValorCompra / QuantidadeParcelas;
+
+	Aux2 = +ValorCompra;
+
+	if (document.getElementById("OpcoesDataPagamento").value == "30Dias") // Primeira parcela será paga daqui a 30 dias
+	{
+		Aux2 = +Aux2 * kJurosAm;
+	}
+
+	for (i = 0; i < +QuantidadeParcelas; i++)
+	{ 
+		Aux2 = +Aux2 - +Parcela; // Retira o valor ao pagar uma parcela
+		if (i < +QuantidadeParcelas - 1) // Só não faz a atualização abaixo na última passada
+		{
+			Aux2 = +Aux2 * kJurosAm; // O dinheiro que resta aplicado rende juros, exceto no último mês
+		}
+	}
+
+	PrecoFinal = +ValorCompra - +Aux2; // Preço final descontando o rendimento
+	DescontoAVista = 100.0 * +Aux2 / +ValorCompra;
+
+	// Imprime resultado
+	document.getElementById("RestoDinheiro").value = Aux2;
+	document.getElementById("PrecoFinal").value = PrecoFinal;
+	document.getElementById("DescontoAVista").value = DescontoAVista;
+}
+function MultipicadorJurosAoMes(JurosAoAno)
+{
+	                                // Exemplo, juros ao ano = 6
+	kJurosAa = (+JurosAoAno/100)+1; // 1.06
+	Aux = 1/12;
+	kJurosAm = Math.pow(kJurosAa, Aux); // 1.004868
+
+	return +kJurosAm; // 1.004868
+}
+</script>
+
+<hr>
+<br>  
+<br>  
+<a href="index.html">Voltar para p&aacute;gina inicial</a>
+<br>
+<br>
+<br>
+<!--  
+<table style="width:100%">
+  <tr>
+    <td></td>
+    <td><a href="01_poupar.html">Próximo >></a></td> 
+  </tr>
+</table>
+-->
+ 
+<!--  <h2>Quanto Poupar</h2>  -->
+ 
+
+<script src="scripts.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-83526305-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+</body>
+
+</html> 

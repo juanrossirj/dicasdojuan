@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Dicas do Juan</title>
+
+<link rel="stylesheet" type="text/css" href="estilo.css">
+</head>
+
+<body>
+
+<nav id="nav01"></nav>
+
+<br>
+<br>
+<b>SIMULADOR DE APOSENTADORIA E RENDIMENTOS</b><br>
+<hr>
+
+<b><font color="red">Para calcular <u>quanto dinheiro voc&ecirc; pode juntar</u> poupando um valor todo m&ecirc;s.</font></b><br>
+<br>
+<b><font color="red">Calcula tamb&eacute;m quanto essa reserva vai render como aposentadoria.</font></b><br>
+<br>
+<font color="red">PREENCHA OS CAMPOS ABAIXO</font><br>
+<br>
+
+<b>Lembre-se que isto &eacute; uma aproxima&ccedil;&atilde;o! O valor exato vai depender de quanto seus investimentos v&atilde;o render ao longo dos anos!</b><br>
+<hr>
+<br>
+
+Vai poupar quanto por m&ecirc;s? R$ <input id="Parcela" value=100><br>
+<br>
+Quanto voc&ecirc; acha que seus investimentos v&atilde;o render (acima da infla&ccedil;&atilde;o) enquanto estiver juntando dinheiro? <input id="JurosAcumulacaoAa" value=4> % ao ano<br>
+<br>
+Quanto voc&ecirc; acha que seus investimentos v&atilde;o render (acima da infla&ccedil;&atilde;o) enquanto estiver aposentado/vivendo de renda? <input id="JurosAposentadoAa" value=3> % ao ano<br>
+<br>
+Vai poupar por quanto tempo? <input id="Anos" value=35> anos<br>
+<br>
+OPCIONAL: Quanto dinheiro voc&ecirc; j&aacute; tem guardado hoje? R$ <input id="Inicial" value=0><br>
+<br>
+OPCIONAL: Se for comer o bolo de dinheiro, em quanto tempo vai querer acabar com toda a reserva? <input id="AnosComendoBolo" value=35> anos<br>
+* Por exemplo, usar todo o dinheiro dos 65 aos 100 anos, n&atilde;o sobrando nada depois disso. <br>
+<br>
+<button type="button" onclick="CalculaValorFuturo()">Calcular</button> <br>
+<hr>
+<br>
+RESULTADOS:<br>
+<br>
+Ao final desse per&iacute;odo voc&ecirc; vai ter juntado: R$ <input id="TotalPoupado" disabled><br>
+<br>
+Esse dinheiro guardado vai te dar uma renda por m&ecirc;s (acima da infla&ccedil;&atilde;o) de: R$ <input id="RendaObtida" disabled><br>
+* Renda para sempre, nunca vai acabar.<br>
+<br>
+<hr>
+Se for comer o bolo de dinheiro, poder&aacute; sacar por m&ecirc;s: R$ <input id="RendaComendoBolo" disabled> durante <input id="MesesComendoBolo" disabled> meses<br>
+* Ao final, ter&aacute; acabado todo o dinheiro.<br>
+<br>
+Se desconsiderarmos os rendimentos, voc&ecirc; poder&aacute; sacar por m&ecirc;s: R$ <input id="SaqueSemRendimentos" disabled> durante <input id="MesesComendoBolo2" disabled> meses<br>
+* Supondo que, por azar, os investimentos n&atilde;o rendam nada ao longo dos anos.<br>
+* Ao final, ter&aacute; zerado toda a reserva.<br>
+<!--
+<p id="Resultado1"> </p>
+<p id="Resultado2"> </p>
+<p id="Resultado3"> </p>
+<p id="Resultado4"> </p>
+<p id="Resultado5"> </p>
+-->
+<script>
+function CalculaValorFuturo()
+{
+    DinheiroInicial = 0; // Inicializando
+
+	// Obtem valor do campo preenchido
+	a1 = document.getElementById("Parcela").value; // Parcela mensal
+
+    Aux = 1/12;	
+	JurosAcumulacaoAa = document.getElementById("JurosAcumulacaoAa").value; // Juros ao ano enquanto forma a reserva, 6
+    kJurosAcumulacaoAa = (+JurosAcumulacaoAa/100)+1; // 1.06
+    JurosAcumulacaoAm = Math.pow(kJurosAcumulacaoAa, Aux); // 1.004868
+
+	JurosAposentadoAa = document.getElementById("JurosAposentadoAa").value; // Juros ao ano enquanto gasta a reserva, 5
+    kJurosAposentadoAa = (+JurosAposentadoAa/100)+1; // 1.05
+    JurosAposentadoAm = Math.pow(kJurosAposentadoAa, Aux); // 1.004074
+	
+	Anos = document.getElementById("Anos").value; // Anos poupando
+    Meses = Anos * 12; // Meses poupando
+    qn1 = Math.pow(JurosAcumulacaoAm, Meses)-1; // q^n-1
+    q1 = JurosAcumulacaoAm - 1; // q-1
+    qn1_q1 = qn1 / q1; // q^n-1 / q-1
+    Soma1 = a1 * qn1_q1; // a1 * (q^n-1 / q-1)
+
+	Inicial = document.getElementById("Inicial").value; // Valor inicial	
+    Soma2 = Inicial * Math.pow(kJurosAcumulacaoAa, Anos);
+	
+	Soma = Soma1 + Soma2;
+	
+	// Imprime resultado
+	document.getElementById("TotalPoupado").value = Soma;
+	
+//	document.getElementById("Resultado1").innerHTML = "Ao final desse período você vai ter juntado ($):";
+//	document.getElementById("Resultado2").innerHTML = Soma;
+//	document.getElementById("Resultado3").innerHTML = "Esse dinheiro guardado vai render acima da inflação por mês ($):";
+	
+    Renda = Soma * (JurosAposentadoAm - 1);
+	document.getElementById("RendaObtida").value = Renda;
+
+//	document.getElementById("Resultado4").innerHTML = Renda;
+
+	AnosComendoBolo = document.getElementById("AnosComendoBolo").value; // Tempo até zerar a reserva
+	MesesComendoBolo = AnosComendoBolo * 12;
+
+	// JurosAposentadoAm = 1.00407
+	i = JurosAposentadoAm - 1; // 0.00407
+	aux1 = Math.pow(JurosAposentadoAm, MesesComendoBolo); // 1.00407^meses
+	aux2 = 1.0 / aux1; 
+	aux3 = 1.0 - aux2;
+	aux4 = i / aux3;
+	RendaComendoBolo = Soma * aux4;
+
+//	document.getElementById("RendaComendoBolo").value = RendaComendoBolo;	
+	document.getElementById("RendaComendoBolo").value = RendaComendoBolo;
+	document.getElementById("MesesComendoBolo").value = MesesComendoBolo;
+
+	SaqueSemRendimentos = Soma / MesesComendoBolo;
+	document.getElementById("SaqueSemRendimentos").value = SaqueSemRendimentos;	
+	document.getElementById("MesesComendoBolo2").value = MesesComendoBolo;
+	}
+</script>
+
+<br>
+<a href="index.html">Voltar para p&aacute;gina inicial</a>
+<br>
+<br>
+<br>
+<!--  
+<table style="width:100%">
+  <tr>
+    <td></td>
+    <td><a href="01_poupar.html">Próximo >></a></td> 
+  </tr>
+</table>
+-->
+ 
+<!--  <h2>Quanto Poupar</h2>  -->
+ 
+
+<script src="scripts.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-83526305-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+</body>
+
+</html> 
